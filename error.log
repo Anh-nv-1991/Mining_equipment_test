@@ -91,3 +91,86 @@ Traceback (most recent call last):
   File "G:\Database\Mining_Equipment_management\backend\.venv\Lib\site-packages\django\urls\resolvers.py", line 831, in _reverse_with_prefix
     raise NoReverseMatch(msg)
 django.urls.exceptions.NoReverseMatch: Reverse for 'login' not found. 'login' is not a valid view function or pattern name.
+[28/Mar/2025 16:09:42] ERROR [django.request:248] Internal Server Error: /secure-admin/login/
+Traceback (most recent call last):
+  File "G:\Database\Mining_Equipment_management\.venv\Lib\site-packages\django\urls\base.py", line 71, in reverse
+    extra, resolver = resolver.namespace_dict[ns]
+                      ~~~~~~~~~~~~~~~~~~~~~~~^^^^
+KeyError: 'two_factor'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "G:\Database\Mining_Equipment_management\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "G:\Database\Mining_Equipment_management\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "G:\Database\Mining_Equipment_management\.venv\Lib\site-packages\two_factor\admin.py", line 58, in login
+    return redirect_to_login(redirect_to)
+  File "G:\Database\Mining_Equipment_management\.venv\Lib\site-packages\django\contrib\auth\views.py", line 184, in redirect_to_login
+    resolved_url = resolve_url(login_url or settings.LOGIN_URL)
+  File "G:\Database\Mining_Equipment_management\.venv\Lib\site-packages\django\shortcuts.py", line 180, in resolve_url
+    return reverse(to, args=args, kwargs=kwargs)
+  File "G:\Database\Mining_Equipment_management\.venv\Lib\site-packages\django\urls\base.py", line 82, in reverse
+    raise NoReverseMatch("%s is not a registered namespace" % key)
+django.urls.exceptions.NoReverseMatch: 'two_factor' is not a registered namespace
+[28/Mar/2025 16:10:48] ERROR [django.request:248] Internal Server Error: /account/two_factor/setup/
+Traceback (most recent call last):
+  File "G:\Database\Mining_Equipment_management\.venv\Lib\site-packages\django\urls\base.py", line 71, in reverse
+    extra, resolver = resolver.namespace_dict[ns]
+                      ~~~~~~~~~~~~~~~~~~~~~~~^^^^
+KeyError: 'two_factor'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "G:\Database\Mining_Equipment_management\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "G:\Database\Mining_Equipment_management\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "G:\Database\Mining_Equipment_management\.venv\Lib\site-packages\django\views\generic\base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "G:\Database\Mining_Equipment_management\.venv\Lib\site-packages\django\utils\decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "G:\Database\Mining_Equipment_management\.venv\Lib\site-packages\django\views\decorators\cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "G:\Database\Mining_Equipment_management\.venv\Lib\site-packages\django\contrib\auth\decorators.py", line 61, in _view_wrapper
+    return _redirect_to_login(request)
+  File "G:\Database\Mining_Equipment_management\.venv\Lib\site-packages\django\contrib\auth\decorators.py", line 25, in _redirect_to_login
+    resolved_login_url = resolve_url(login_url or settings.LOGIN_URL)
+  File "G:\Database\Mining_Equipment_management\.venv\Lib\site-packages\django\shortcuts.py", line 180, in resolve_url
+    return reverse(to, args=args, kwargs=kwargs)
+  File "G:\Database\Mining_Equipment_management\.venv\Lib\site-packages\django\urls\base.py", line 82, in reverse
+    raise NoReverseMatch("%s is not a registered namespace" % key)
+django.urls.exceptions.NoReverseMatch: 'two_factor' is not a registered namespace
+[28/Mar/2025 16:14:17] ERROR [django.request:248] Internal Server Error: /account/two_factor/setup/
+Traceback (most recent call last):
+  File "G:\Database\Mining_Equipment_management\.venv\Lib\site-packages\django\urls\base.py", line 71, in reverse
+    extra, resolver = resolver.namespace_dict[ns]
+                      ~~~~~~~~~~~~~~~~~~~~~~~^^^^
+KeyError: 'two_factor'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "G:\Database\Mining_Equipment_management\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "G:\Database\Mining_Equipment_management\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "G:\Database\Mining_Equipment_management\.venv\Lib\site-packages\django\views\generic\base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "G:\Database\Mining_Equipment_management\.venv\Lib\site-packages\django\utils\decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "G:\Database\Mining_Equipment_management\.venv\Lib\site-packages\django\views\decorators\cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "G:\Database\Mining_Equipment_management\.venv\Lib\site-packages\django\contrib\auth\decorators.py", line 61, in _view_wrapper
+    return _redirect_to_login(request)
+  File "G:\Database\Mining_Equipment_management\.venv\Lib\site-packages\django\contrib\auth\decorators.py", line 25, in _redirect_to_login
+    resolved_login_url = resolve_url(login_url or settings.LOGIN_URL)
+  File "G:\Database\Mining_Equipment_management\.venv\Lib\site-packages\django\shortcuts.py", line 180, in resolve_url
+    return reverse(to, args=args, kwargs=kwargs)
+  File "G:\Database\Mining_Equipment_management\.venv\Lib\site-packages\django\urls\base.py", line 82, in reverse
+    raise NoReverseMatch("%s is not a registered namespace" % key)
+django.urls.exceptions.NoReverseMatch: 'two_factor' is not a registered namespace
