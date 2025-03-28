@@ -1,0 +1,40 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+<link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
+{% block branding %}
+    <div class="custom-header">
+        <img src="{% static 'images/hatu_logo.png' %}" alt="Logo" width="40" height="40">
+        <h1 id="custom-title">Chương trình Quản lý thiết bị máy khai thác</h1>
+    </div>
+{% endblock %}
+
+{% block extrahead %}
+    <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
+    <style>
+        /* Định dạng tiêu đề */
+        #custom-title {
+            color: #004085;
+            font-size: 30px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        /* Tùy chỉnh header */
+        .custom-header {
+            display: flex;
+            align-items: center;
+            background-color: #e3f2fd;
+            padding: 7px;
+            border-bottom: 3px solid #007bff;
+        }
+
+        /* Logo */
+        .custom-header img {
+            margin-right: 15px;
+            margin-left: 10px;
+        }
+    </style>
+
+    <!-- Thêm các script vào một thẻ extrahead duy nhất -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% endblock %}

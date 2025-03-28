@@ -1,0 +1,68 @@
+{% load static %}
+
+<h2>Completed Maintenance Record for {{ comp.maintenance_record.record_id }}</h2>
+<p><strong>Equipment:</strong> {{ comp.maintenance_record.equipment.name }}</p>
+<p><strong>Maintenance Level:</strong> {{ comp.maintenance_record.get_maintenance_level_display }}</p>
+<p><strong>Start Time:</strong> {{ comp.maintenance_record.start_time|date:"Y-m-d H:i" }}</p>
+<p><strong>End Time:</strong> {{ comp.maintenance_record.end_time|date:"Y-m-d H:i" }}</p>
+<hr>
+
+{% for ttype, items in grouped_tasks.items %}
+  <h3>{{ ttype|upper }}</h3>
+  <table border="1" style="width:100%; border-collapse: collapse;">
+    <thead>
+      <tr>
+        <th>#</th>
+        {% if ttype|upper == 'REPLACEMENTTEMPLATE' %}
+          <th>Task Name</th>
+          <th>Replacement Type</th>
+          <th>Manufacturer ID</th>
+          <th>Alternative ID</th>
+          <th>Planned Quantity</th>
+          <th>Actual Quantity</th>
+          <th>Inventory Status</th>
+          <th>Status</th>
+          <th>Notes</th>
+        {% elif ttype|upper == 'SUPPLEMENTTEMPLATE' %}
+          <th>Task Name</th>
+          <th>Position</th>
+          <th>Quantity</th>
+          <th>Completed</th>
+          <th>Notes</th>
+        {% else %}
+          <th>Task Name</th>
+          <th>Condition</th>
+          <th>Notes</th>
+        {% endif %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for task_dict, result_dict in items %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          {% if task_dict.task_type == 'replacementtemplate' %}
+            <td>{{ task_dict.task_name }}</td>
+            <td>{{ task_dict.replacement_type }}</td>
+            <td>{{ task_dict.manufacturer_id }}</td>
+            <td>{{ task_dict.alternative_id }}</td>
+            <td>{{ task_dict.quantity }}</td>
+            <td>{{ result_dict.actual_quantity }}</td>
+            <td>{{ result_dict.inventory_status }}</td>
+            <td>{{ result_dict.status }}</td>
+            <td>{{ result_dict.notes }}</td>
+          {% elif task_dict.task_type == 'supplementtemplate' %}
+            <td>{{ task_dict.task_name }}</td>
+            <td>{{ task_dict.position }}</td>
+            <td>{{ task_dict.quantity }}</td>
+            <td>{% if result_dict.completed %}Đã bổ sung{% else %}Chưa bổ sung{% endif %}</td>
+            <td>{{ result_dict.notes }}</td>
+          {% else %}
+            <td>{{ task_dict.task_name }}</td>
+            <td>{{ result_dict.condition }}</td>
+            <td>{{ result_dict.notes }}</td>
+          {% endif %}
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endfor %}

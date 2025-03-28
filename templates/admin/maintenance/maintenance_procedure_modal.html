@@ -1,0 +1,37 @@
+{% load static %}
+<!-- Modal được ẩn mặc định -->
+<div id="maintenance-modal" class="modal" style="display: none;">
+    style="display:block; top:10%; left:50%; transform:translateX(-50%); max-height:80vh; overflow:auto;">
+    <div class="modal-content">
+        <span id="close-modal" class="close" style="cursor: pointer;">&times;</span>
+        <h2 id="modal-title">Maintenance Procedure for {{ record.record_id }}</h2>
+
+        <!-- Hiển thị thông tin của bản ghi -->
+        <div id="record-info">
+            <p><strong>Equipment:</strong> {{ record.equipment.name }}</p>
+            <p><strong>Maintenance Level:</strong> {{ record.get_maintenance_level_display }}</p>
+            <p><strong>Start Time:</strong> {{ record.start_time|date:"Y-m-d H:i" }}</p>
+            <p><strong>End Time:</strong> {{ record.end_time|date:"Y-m-d H:i" }}</p>
+        </div>
+
+        <!-- Hiển thị danh sách task của bản ghi -->
+        <div id="tasks-container">
+            {% if record.tasks.all %}
+                <h3>Tasks:</h3>
+                <ul>
+                    {% for task in record.tasks.all %}
+                        <li>{{ task }} - Quantity: {{ task.quantity }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No tasks found.</p>
+            {% endif %}
+        </div>
+
+        <!-- Nút lưu -->
+        <div class="modal-footer">
+            <button id="save-maintenance">Lưu</button>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,76 @@
+/* maintenance_history.css */
+
+/* =================== */
+/* 🎨 Style Modal History */
+/* =================== */
+#history-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 1200px;
+    max-height: 90vh;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* Modal content cho History */
+#history-modal .modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* =================== */
+/* 🎨 Style Bảng Lịch Sử  */
+/* =================== */
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.history-table th,
+.history-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.history-table th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+}
+
+.history-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.history-table tr:hover {
+    background-color: #e0e0e0;
+}
+
+/* =================== */
+/* ❌ Nút Đóng Modal History */
+/* =================== */
+#close-history-modal {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #ff4d4d;
+    cursor: pointer;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transition: color 0.3s ease-in-out;
+}
+
+#close-history-modal:hover {
+    color: #d40000;
+}

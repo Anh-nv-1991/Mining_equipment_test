@@ -1,0 +1,73 @@
+fieldset.module.aligned {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.inline-group {
+    flex: 1;
+    margin-left: 20px;
+    min-width: 40%;
+}
+
+fieldset.module {
+    flex: 2;
+    min-width: 55%;
+}
+/* =================== */
+/* 🎨 Fix Nút "Xem" Trong Admin Django */
+/* =================== */
+.open-modal {
+    background-color: #007bff !important; /* Màu xanh dương */
+    color: white !important; /* Chữ trắng rõ */
+    font-size: 14px !important;
+    font-weight: bold !important;
+    padding: 6px 12px !important;
+    border: none !important;
+    border-radius: 5px !important;
+    cursor: pointer !important;
+    opacity: 1 !important; /* Không bị mờ */
+    visibility: visible !important; /* Luôn hiển thị */
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100px !important; /* Giữ kích thước hợp lý */
+    height: 30px !important;
+    text-align: center !important;
+    transition: all 0.2s ease-in-out !important;
+}
+
+/* Khi hover */
+.open-modal:hover {
+    background-color: #0056b3 !important; /* Màu xanh đậm hơn */
+    transform: scale(1.05);
+}
+/* =================== */
+/* 🎨 Fix Nút "Xem" Trong Admin Django */
+/* =================== */
+.open-modal {
+    background-color: #007bff !important; /* Màu xanh dương */
+    color: white !important; /* Chữ trắng rõ */
+    font-size: 14px !important;
+    font-weight: bold !important;
+    padding: 6px 12px !important;
+    border: none !important;
+    border-radius: 5px !important;
+    cursor: pointer !important;
+    opacity: 1 !important; /* Không bị mờ */
+    visibility: visible !important; /* Luôn hiển thị */
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100px !important; /* Giữ kích thước hợp lý */
+    height: 36px !important;
+    text-align: center !important;
+    transition: all 0.2s ease-in-out !important;
+}
+
+/* Khi hover */
+.open-modal:hover {
+    background-color: #0056b3 !important; /* Màu xanh đậm hơn */
+    transform: scale(1.05);
+}

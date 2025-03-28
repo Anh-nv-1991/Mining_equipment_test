@@ -1,0 +1,19 @@
+{% extends "admin/change_list.html" %}
+{% load static %}
+
+{% block extrahead %}
+    {{ block.super }}
+    <!-- CSS cho modal -->
+    <link rel="stylesheet" href="{% static 'admin/css/maintenance.css' %}">
+    <link rel="stylesheet" href="{% static 'admin/css/maintenance_history.css' %}">
+{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+    {% include "admin/maintenance/maintenance_procedure_modal.html" %}
+    {% include "admin/maintenance/maintenance_history_modal.html" %}
+
+    <!-- Đặt script ngay dưới modal -->
+    <script src="{% static 'admin/js/maintenance.js' %}"></script>
+    <script src="{% static 'admin/js/maintenance_history.js' %}"></script>
+{% endblock %}

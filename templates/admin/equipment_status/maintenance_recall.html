@@ -1,0 +1,42 @@
+{% load static %}
+{% block content %}
+<h2>Lịch Sử Bảo Dưỡng cho {{ equipment.category.name }} số {{ equipment.name }}</h2>
+
+<h3>Completed Maintenance Records</h3>
+<ul>
+  {% for record in records %}
+    <li>
+      <a href="#" class="open-readonly-modal"
+         data-modal-url="{% url 'equipment_status:maintenance_record_readonly' record.id %}">
+        {{ record.record_id }} (Read‑Only)
+      </a>
+    </li>
+  {% empty %}
+    <li>Không có bản ghi bảo dưỡng đã hoàn thành.</li>
+  {% endfor %}
+</ul>
+
+<h3>Intermediate Maintenance Records</h3>
+<ul>
+  {% for rec in intermediate_records %}
+    <li>
+      <a href="#" class="open-readonly-modal"
+         data-modal-url="{% url 'equipment_status:maintenance_intermediate_readonly' rec.id %}">
+        {{ rec.label }} (Read‑Only)
+      </a>
+    </li>
+  {% empty %}
+    <li>Không có bản ghi bảo dưỡng trung gian.</li>
+  {% endfor %}
+</ul>
+
+<div id="maintenanceReadonlyModal" class="modal" style="display:none; position: fixed; top:10%; left:10%; width:80%; background:#fff; border:1px solid #ccc; padding:20px; z-index:1000;">
+  <span id="closeReadonlyModal" class="close" style="float:right; cursor:pointer;">&times;</span>
+  <div id="readonlyModalBody"></div>
+</div>
+{% endblock %}
+
+{% block extrahead %}
+<link rel="stylesheet" href="{% static 'admin/css/equipment_status_modal_readonly.css' %}">
+<script src="{% static 'admin/js/equipment_status_modal_readonly.js' %}"></script>
+{% endblock %}

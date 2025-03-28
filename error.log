@@ -1,0 +1,75 @@
+[28/Mar/2025 13:14:34] ERROR [backend.apps.maintenance.test.test_maintenance:54] Error trong setUp: Field 'maintenance_level' expected a number but got 'Level 1'.
+[28/Mar/2025 13:14:35] ERROR [backend.apps.maintenance.test.test_maintenance:54] Error trong setUp: Field 'maintenance_level' expected a number but got 'Level 1'.
+[28/Mar/2025 13:19:11] ERROR [backend.apps.maintenance.test.test_maintenance:78] Error in test_retrieve_maintenance_record: {'id'[88 chars]', 'start_time': '2025-03-25T15:00:00+07:00', 'end_time': None} != {'id'[88 chars]', 'start_time': '2025-03-25T08:00:00Z', 'end_time': None}
+[28/Mar/2025 14:04:24] ERROR [django.request:248] Internal Server Error: /equipment_management/
+Traceback (most recent call last):
+  File "G:\Database\Mining_Equipment_management\backend\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "G:\Database\Mining_Equipment_management\backend\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "G:\Database\Mining_Equipment_management\backend\.venv\Lib\site-packages\django\contrib\auth\decorators.py", line 60, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "G:\Database\Mining_Equipment_management\backend\apps\equipment_management\views.py", line 6, in home
+    return render(request, 'equipment/home.html')
+  File "G:\Database\Mining_Equipment_management\backend\.venv\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "G:\Database\Mining_Equipment_management\backend\.venv\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "G:\Database\Mining_Equipment_management\backend\.venv\Lib\site-packages\django\template\loader.py", line 19, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+django.template.exceptions.TemplateDoesNotExist: equipment/home.html
+[28/Mar/2025 14:04:44] ERROR [django.request:248] Internal Server Error: /equipment_management/
+Traceback (most recent call last):
+  File "G:\Database\Mining_Equipment_management\backend\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "G:\Database\Mining_Equipment_management\backend\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "G:\Database\Mining_Equipment_management\backend\.venv\Lib\site-packages\django\contrib\auth\decorators.py", line 60, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "G:\Database\Mining_Equipment_management\backend\apps\equipment_management\views.py", line 6, in home
+    return render(request, 'equipment/home.html')
+  File "G:\Database\Mining_Equipment_management\backend\.venv\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "G:\Database\Mining_Equipment_management\backend\.venv\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "G:\Database\Mining_Equipment_management\backend\.venv\Lib\site-packages\django\template\loader.py", line 19, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+django.template.exceptions.TemplateDoesNotExist: equipment/home.html
+[28/Mar/2025 14:07:29] ERROR [django.request:248] Internal Server Error: /api/v1/equipment-status/2/
+Traceback (most recent call last):
+  File "G:\Database\Mining_Equipment_management\backend\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "G:\Database\Mining_Equipment_management\backend\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "G:\Database\Mining_Equipment_management\backend\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "G:\Database\Mining_Equipment_management\backend\.venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "G:\Database\Mining_Equipment_management\backend\.venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "G:\Database\Mining_Equipment_management\backend\.venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "G:\Database\Mining_Equipment_management\backend\.venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "G:\Database\Mining_Equipment_management\backend\.venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "G:\Database\Mining_Equipment_management\backend\.venv\Lib\site-packages\rest_framework\mixins.py", line 56, in retrieve
+    return Response(serializer.data)
+                    ^^^^^^^^^^^^^^^
+  File "G:\Database\Mining_Equipment_management\backend\.venv\Lib\site-packages\rest_framework\serializers.py", line 571, in data
+    ret = super().data
+          ^^^^^^^^^^^^
+  File "G:\Database\Mining_Equipment_management\backend\.venv\Lib\site-packages\rest_framework\serializers.py", line 249, in data
+    self._data = self.to_representation(self.instance)
+                 ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "G:\Database\Mining_Equipment_management\backend\.venv\Lib\site-packages\rest_framework\serializers.py", line 538, in to_representation
+    ret[field.field_name] = field.to_representation(attribute)
+                            ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "G:\Database\Mining_Equipment_management\backend\.venv\Lib\site-packages\rest_framework\fields.py", line 1654, in to_representation
+    return [self.child.to_representation(item) if item is not None else None for item in data]
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "G:\Database\Mining_Equipment_management\backend\.venv\Lib\site-packages\rest_framework\fields.py", line 921, in to_representation
+    return int(value)
+TypeError: int() argument must be a string, a bytes-like object or a real number, not 'tuple'
