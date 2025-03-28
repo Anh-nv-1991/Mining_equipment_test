@@ -1,15 +1,12 @@
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import RedirectView
-from django.conf import settings
-from django.conf.urls.static import static
-from apps.secure_admin import OTPAdminSite
-from two_factor.urls import urlpatterns as tf_urls
-from rest_framework.routers import DefaultRouter
-from apps.maintenance.views import MaintenanceRecordViewSet
-from apps.equipment_status.views import EquipmentStatusViewSet
-
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+from rest_framework.routers import DefaultRouter
+
+from apps.secure_admin import OTPAdminSite
 
 # Secure admin setup...
 secure_admin_site = OTPAdminSite(name='secure_admin')
@@ -20,7 +17,7 @@ router = DefaultRouter()
 urlpatterns = [
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     path("api/docs/", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"),
-    path('', include('two_factor.urls', namespace='two_factor')),
+    path('', include(('two_factor.urls', 'two_factor'), namespace='two_factor')),
 
     path('grappelli/', include('grappelli.urls')),
     path(
