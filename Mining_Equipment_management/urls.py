@@ -5,8 +5,10 @@ from django.urls import path, include
 from django.views.generic import RedirectView
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework.routers import DefaultRouter
+from two_factor.urls import urlpatterns as tf_patterns
 
 from apps.secure_admin import OTPAdminSite
+filtered_tf_patterns = [pattern for pattern in tf_patterns if hasattr(pattern, 'pattern')]
 
 # Secure admin setup...
 secure_admin_site = OTPAdminSite(name='secure_admin')
@@ -17,7 +19,7 @@ router = DefaultRouter()
 urlpatterns = [
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     path("api/docs/", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"),
-    path('', include(('two_factor.urls', 'two_factor'), namespace='two_factor')),
+    path('', include((filtered_tf_patterns, 'two_factor'), namespace='two_factor')),
 
     path('grappelli/', include('grappelli.urls')),
     path(
