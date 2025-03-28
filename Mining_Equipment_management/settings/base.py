@@ -2,7 +2,6 @@ import os
 from pathlib import Path
 import environ
 
-
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 
 env = environ.Env()
@@ -25,10 +24,15 @@ DATABASES = {
         "HOST": DB_HOST,
         "PORT": DB_PORT,
         "TEST": {
-            "NAME": DB_NAME,  # Dùng lại database đã có, không cho Django tự tạo tên mới
+            # Dùng lại database đã có, không cho Django tự tạo database mới
+            "NAME": DB_NAME,
+            # Yêu cầu Django sử dụng database mặc định như một mirror,
+            # do đó, test runner không cố gắng tạo database mới.
+            "MIRROR": "default",
         },
     }
 }
+
 # Cấu hình bắt buộc để Django boot
 INSTALLED_APPS = [
     'django_otp',
@@ -52,19 +56,19 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "django_filters",
     "environ",
-
 ]
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MIDDLEWARE = [
-  'corsheaders.middleware.CorsMiddleware',
-  'django.middleware.security.SecurityMiddleware',
-  'django.contrib.sessions.middleware.SessionMiddleware',
-  'django.middleware.common.CommonMiddleware',
-  'django.middleware.csrf.CsrfViewMiddleware',
-  'django.contrib.auth.middleware.AuthenticationMiddleware',
-  'django_otp.middleware.OTPMiddleware',
-  'django.contrib.messages.middleware.MessageMiddleware',
-  'django.middleware.clickjacking.XFrameOptionsMiddleware'
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django_otp.middleware.OTPMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware'
 ]
 
 ROOT_URLCONF = "Mining_Equipment_management.urls"
@@ -91,9 +95,8 @@ LOGIN_REDIRECT_URL = '/secure-admin/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 CSV_EXPORT_ROOT = os.path.join(BASE_DIR, "exports")
-MEDIA_ROOT = CSV_EXPORT_ROOT
-MEDIA_URL = '/media/exports/'
 MEDIA_ROOT = BASE_DIR / 'exports'
+MEDIA_URL = '/media/exports/'
 USE_TZ = True
 TIME_ZONE = 'Asia/Ho_Chi_Minh'
 REST_FRAMEWORK = {
@@ -126,7 +129,6 @@ LOGGING = {
         },
     },
     'loggers': {
-        # Áp dụng cho tất cả các logger trong dự án
         '': {
             'handlers': ['error_file'],
             'level': 'ERROR',
