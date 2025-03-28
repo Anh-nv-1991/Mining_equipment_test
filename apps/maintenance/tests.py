@@ -2,8 +2,8 @@ from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.utils import timezone
-from equipment_management.models import Equipment, EquipmentCategories, EquipmentManagementUnit
-from maintenance.models import MaintenanceRecord
+from apps.equipment_management.models import Equipment, EquipmentCategories, EquipmentManagementUnit
+from apps.maintenance.models import MaintenanceRecord
 
 
 class MaintenanceModuleTests(TestCase):
