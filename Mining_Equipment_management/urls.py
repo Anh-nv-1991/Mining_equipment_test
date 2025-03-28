@@ -5,31 +5,24 @@ from django.urls import path, include
 from django.views.generic import RedirectView
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework.routers import DefaultRouter
-from two_factor.urls import urlpatterns as tf_patterns
+from two_factor.urls import urlpatterns as tf_urlpatterns
 
 from apps.secure_admin import OTPAdminSite
-filtered_tf_patterns = [pattern for pattern in tf_patterns if hasattr(pattern, 'pattern')]
 
 # Secure admin setup...
 secure_admin_site = OTPAdminSite(name='secure_admin')
-# ...register models
-
 router = DefaultRouter()
+
+# Tách tf_urlpatterns thành list các URL patterns và app_name (không dùng nữa ở đây)
+tf_patterns, tf_app_name = tf_urlpatterns
 
 urlpatterns = [
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     path("api/docs/", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"),
-    path('', include((filtered_tf_patterns, 'two_factor'), namespace='two_factor')),
-
+] + tf_patterns + [
     path('grappelli/', include('grappelli.urls')),
-    path(
-        "api/v1/maintenance/",
-        include(("apps.maintenance.urls", "maintenance"), namespace="maintenance"),
-    ),
-    path(
-        "api/v1/equipment-status/",
-        include(("apps.equipment_status.urls", "equipment_status"), namespace="equipment_status"),
-    ),
+    path("api/v1/maintenance/", include(("apps.maintenance.urls", "maintenance"), namespace="maintenance")),
+    path("api/v1/equipment-status/", include(("apps.equipment_status.urls", "equipment_status"), namespace="equipment_status")),
     path('wear-parts/', include('apps.wear_part_stock.urls')),
     path('favicon.ico', RedirectView.as_view(url='/static/images/favicon.ico')),
     path('admin/', admin.site.urls),

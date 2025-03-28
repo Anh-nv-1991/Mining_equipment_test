@@ -24,6 +24,9 @@ DATABASES = {
         "PASSWORD": DB_PASS,
         "HOST": DB_HOST,
         "PORT": DB_PORT,
+        "TEST": {
+            "NAME": DB_NAME,  # Dùng lại database đã có, không cho Django tự tạo tên mới
+        },
     }
 }
 # Cấu hình bắt buộc để Django boot
