@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from apps.equipment_management.models import Equipment, EquipmentCategories, EquipmentManagementUnit
 from apps.maintenance.models import MaintenanceRecord
-
+from apps.equipment_status.models import EquipmentStatus
 
 class MaintenanceModuleTests(TestCase):
     def setUp(self):
@@ -21,8 +21,10 @@ class MaintenanceModuleTests(TestCase):
             category=self.category,
             management_unit=self.management_unit,
             engine_hours=100,
+        )
+        self.status = EquipmentStatus.objects.create(
+            equipment=self.equipment,
             operator_team="Team A",
-            current_condition="Good condition"
         )
         self.client.login(username="testuser", password="testpass")
 
