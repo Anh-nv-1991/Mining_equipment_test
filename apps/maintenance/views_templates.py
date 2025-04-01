@@ -10,7 +10,6 @@ def maintenance_modal_view(request, record_id):
     record = get_object_or_404(MaintenanceRecord, pk=record_id)
     return render(request, "admin/maintenance/maintenance_procedure_modal.html", {"record": record})
 
-
 def get_equipment_by_category(request):
     if not request.user.is_authenticated:
         return JsonResponse({"error": "Unauthorized"}, status=401)

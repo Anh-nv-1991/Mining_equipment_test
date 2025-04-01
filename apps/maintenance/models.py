@@ -52,7 +52,8 @@ class MaintenanceRecord(models.Model):
 
     def __str__(self):
         # Thay self.equipment bằng self.equipment.name
-        return f"{self.equipment.name} - {self.maintenance_level}h"
+        def __str__(self):
+            return f"{self.equipment.name} ({self.category}) - {self.maintenance_level}h"
 
     class Meta:
         verbose_name = "01. Maintenance Record"

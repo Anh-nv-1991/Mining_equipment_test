@@ -19,17 +19,14 @@ def generate_record_id(record):
 
     return f"{cat_code}-{equip_code}-{level_str}-{date_part}"
 
-
 def calculate_shift_count(start: datetime, end: datetime) -> int:
     total_hours = (end - start).total_seconds() / 3600
     return math.ceil(total_hours / 8)
-
 
 def generate_csv_filename(record) -> str:
     rid = generate_record_id(record)
     shift_count = calculate_shift_count(record.start_time, record.end_time)
     return f"{rid}_{shift_count}.csv"
-
 
 def check_inventory_for_template(template):
     required = getattr(template, 'quantity', 0) or 0
@@ -44,6 +41,7 @@ def check_inventory_for_template(template):
     if total_stock >= required:
         return {"status": "ok", "available": total_stock, "shortage": 0}
     return {"status": "warning", "available": total_stock, "shortage": required - total_stock}
+
 def sanitize_name(name: str) -> str:
     """
     Chuẩn hóa tên file/thư mục: bỏ ký tự đặc biệt, thay dấu cách bằng _, viết thường.
@@ -78,6 +76,7 @@ def get_replacement_status(result):
         return "Completed"
     else:
         return "Overdone"
+
 def map_status_to_vietnamese(status):
     return {
         "Not Started": "Chưa thực hiện",
@@ -86,6 +85,7 @@ def map_status_to_vietnamese(status):
         "Overdone": "Thừa số lượng yêu cầu",
         "Invalid": "Không xác định"
     }.get(status, status)
+
 def get_grouped_data(completed_record):
     """
     Trả về cấu trúc dữ liệu đã nhóm:
@@ -127,7 +127,6 @@ def get_grouped_data(completed_record):
             final_grouped[ttype] = combined
 
     return final_grouped
-
 
 def render_grouped_table(grouped):
     """

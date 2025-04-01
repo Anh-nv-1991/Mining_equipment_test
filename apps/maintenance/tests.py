@@ -45,7 +45,7 @@ class MaintenanceModuleTests(TestCase):
         self.assertEqual(str(record), expected_str)
 
     def test_get_equipment_by_category(self):
-        url = reverse('get_equipment_by_category')
+        url = reverse("maintenance:get_equipment_by_category")
         response = self.client.get(url, {"category_id": self.category.id})
         self.assertEqual(response.status_code, 200)
         self.assertIn("equipments", response.json())
@@ -53,6 +53,6 @@ class MaintenanceModuleTests(TestCase):
     def test_get_maintenance_tasks_unauthenticated(self):
         # Kiểm tra API bảo dưỡng yêu cầu xác thực
         self.client.logout()
-        url = reverse('get_maintenance_tasks', args=[1])
+        url = reverse("maintenance:get_maintenance_tasks", args=[1])
         response = self.client.get(url)
         self.assertEqual(response.status_code, 401)
