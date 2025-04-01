@@ -24,7 +24,7 @@ class MaintenanceModuleTests(TestCase):
         )
         self.status = EquipmentStatus.objects.create(
             equipment=self.equipment,
-            operator_team="Team A",
+            operation_team="Team A",
         )
         self.client.login(username="testuser", password="testpass")
 
