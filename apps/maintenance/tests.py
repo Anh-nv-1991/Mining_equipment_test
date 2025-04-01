@@ -44,7 +44,7 @@ class MaintenanceModuleTests(TestCase):
         )
 
     def test_create_maintenance_record(self):
-        expected_str = "Test Excavator - 250h"
+        expected_str = "Test Excavator (Excavator) - 250h"
         self.assertEqual(str(self.record), expected_str)
 
     def test_get_equipment_by_category(self):
