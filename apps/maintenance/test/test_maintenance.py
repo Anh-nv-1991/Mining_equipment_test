@@ -1,9 +1,11 @@
+# tests/test_maintenance.py
 import logging
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from rest_framework.test import APIClient
 from rest_framework import status
+from django.utils import timezone
 from django.utils.dateparse import parse_datetime
 
 from apps.equipment_management.models import (
@@ -12,6 +14,7 @@ from apps.equipment_management.models import (
     EquipmentManagementUnit,
     Manufacturer
 )
+from apps.equipment_status.models import EquipmentStatus
 from apps.maintenance.models import MaintenanceRecord
 from apps.maintenance.serializers import MaintenanceRecordSerializer
 
@@ -19,74 +22,74 @@ User = get_user_model()
 logger = logging.getLogger(__name__)
 
 
-class MaintenanceRecordAPITest(TestCase):
+class MaintenanceRecordTest(TestCase):
     def setUp(self):
-        try:
-            # Tạo tài khoản test
-            self.user = User.objects.create_user(username="test_admin", password="4791")
-            self.client = APIClient()
-            self.client.login(username="test_admin", password="4791")
+        self.client = APIClient()
+        self.user = User.objects.create_user(username="test_admin", password="4791")
+        self.client.login(username="test_admin", password="4791")
 
-            # Tạo các đối tượng cần thiết
-            self.category = EquipmentCategories.create_if_not_exists("Test Category")
-            self.manufacturer = Manufacturer.objects.create(name="Test Manufacturer")
-            self.management_unit = EquipmentManagementUnit.objects.create(name="Test Unit")
+        # Equipment setup
+        self.category = EquipmentCategories.objects.create(name="Test Category")
+        self.management_unit = EquipmentManagementUnit.objects.create(name="Test Unit")
+        self.manufacturer = Manufacturer.objects.create(name="Test Manufacturer")
 
-            self.equipment = Equipment.objects.create(
-                name="Test Equipment",
-                category=self.category,
-                management_unit=self.management_unit,
-                engine_hours=100,
-                manufacturer=self.manufacturer,
-            )
+        self.equipment = Equipment.objects.create(
+            name="Test Equipment",
+            category=self.category,
+            management_unit=self.management_unit,
+            engine_hours=100,
+            manufacturer=self.manufacturer,
+        )
 
-            # Sử dụng số cho maintenance_level vì model yêu cầu kiểu số
-            self.record1 = MaintenanceRecord.objects.create(
-                equipment=self.equipment,
-                category=self.category,
-                maintenance_level=1,
-                start_time="2025-03-25T08:00:00Z"
-            )
-            self.record2 = MaintenanceRecord.objects.create(
-                equipment=self.equipment,
-                category=self.category,
-                maintenance_level=2,
-                start_time="2025-03-26T09:00:00Z"
-            )
-        except Exception as e:
-            logger.error("Error in setUp: %s", e)
-            raise
+        self.status = EquipmentStatus.objects.create(
+            equipment=self.equipment,
+            operation_team="Team A",
+        )
+
+        self.record1 = MaintenanceRecord.objects.create(
+            equipment=self.equipment,
+            category=self.category,
+            maintenance_level=250,
+            location="Site A",
+            start_time=timezone.now(),
+            responsible_units="Team A"
+        )
+        self.record2 = MaintenanceRecord.objects.create(
+            equipment=self.equipment,
+            category=self.category,
+            maintenance_level=500,
+            location="Site B",
+            start_time=timezone.now(),
+            responsible_units="Team A"
+        )
+
+    def test_create_maintenance_record_str(self):
+        expected_str = f"{self.equipment.name} ({self.category}) - 250h"
+        self.assertEqual(str(self.record1), expected_str)
+
+    def test_get_equipment_by_category(self):
+        url = reverse("maintenance:get_equipment_by_category")
+        response = self.client.get(url, {"category_id": self.category.id})
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("equipments", response.json())
 
     def test_list_maintenance_records(self):
-        try:
-            url = reverse("maintenance:maintenance-record-list")
-            response = self.client.get(url, {"limit": 1, "offset": 0})
-            self.assertEqual(response.status_code, status.HTTP_200_OK)
-            self.assertIn("count", response.data)
-            self.assertIn("results", response.data)
-            self.assertEqual(len(response.data["results"]), 1)
-        except Exception as e:
-            logger.error("Error in test_list_maintenance_records: %s", e)
-            raise
+        url = reverse("maintenance:maintenance-record-list")
+        response = self.client.get(url, {"limit": 1, "offset": 0})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn("count", response.data)
+        self.assertIn("results", response.data)
+        self.assertEqual(len(response.data["results"]), 1)
 
     def test_retrieve_maintenance_record(self):
-        try:
-            url = reverse("maintenance:maintenance-record-detail", args=[self.record1.id])
-            response = self.client.get(url)
-            self.assertEqual(response.status_code, status.HTTP_200_OK)
-            serializer = MaintenanceRecordSerializer(self.record1)
+        url = reverse("maintenance:maintenance-record-detail", args=[self.record1.id])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-            # So sánh start_time bằng cách chuyển đổi về đối tượng datetime
-            response_start = parse_datetime(response.data.get('start_time'))
-            expected_start = parse_datetime(serializer.data.get('start_time'))
-            self.assertEqual(response_start, expected_start, "Giá trị start_time không khớp sau chuyển đổi múi giờ")
+        serializer = MaintenanceRecordSerializer(self.record1)
+        response_start = parse_datetime(response.data.get('start_time'))
+        expected_start = parse_datetime(serializer.data.get('start_time'))
+        self.assertEqual(response_start, expected_start, "Giá trị start_time không khớp")
 
-            # So sánh các trường khác
-            self.assertEqual(response.data.get('id'), serializer.data.get('id'))
-            self.assertEqual(response.data.get('end_time'), serializer.data.get('end_time'))
-        except Exception as e:
-            logger.error("Error in test_retrieve_maintenance_record: %s", e)
-            raise
-
-        def test_for_error(self):
-            raise Exception("Giả lập lỗi cho kiểm tra log")
+        self.assertEqual(response.data.get('id'), serializer.data.get('id'))
+        self.assertEqual(response.data.get('end_time'), serializer.data.get('end_time'))
