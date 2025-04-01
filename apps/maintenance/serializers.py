@@ -45,27 +45,30 @@ class ModalMaintenanceTaskSerializer(serializers.ModelSerializer):
         return getattr(obj.replacement_result,'actual_quantity',0) if hasattr(obj,'replacement_result') else ''
 
     def get_completed(self, obj):
-        return obj.supplement_result.completed if hasattr(obj,'supplement_result') else False
+        res = getattr(obj, "supplement_result", None)
+        return res.completed if res else False
 
     def get_condition(self, obj):
-        if hasattr(obj,'inspection_result'):
-            return obj.inspection_result.condition
-        if hasattr(obj,'cleaning_result'):
-            return obj.cleaning_result.condition
-        return ''
-
-    def get_check_inventory(self, obj):
-        if obj.content_type.model.lower()=='replacementtemplate':
-            result = obj.template.check_inventory()
-            return "OK" if result.get('status')=='ok' else f"Thiếu - {result.get('shortage',0)}"
-        return ''
+        res = getattr(obj, "inspection_result", None)
+        if res:
+            return res.condition
+        res = getattr(obj, "cleaning_result", None)
+        if res:
+            return res.condition
+        return ""
 
     def get_notes(self, obj):
-        for attr in ('supplement_result','replacement_result','inspection_result','cleaning_result'):
+        for attr in ("supplement_result", "replacement_result", "inspection_result", "cleaning_result"):
             res = getattr(obj, attr, None)
             if res:
                 return res.notes
-        return ''
+        return ""
+
+    def get_check_inventory(self, obj):
+        # Chỉ áp dụng cho replacementtemplate
+        if hasattr(obj, "template") and callable(getattr(obj.template, "check_inventory", None)):
+            return obj.template.check_inventory()
+        return ""
 
     class Meta:
         model = MaintenanceTask
