@@ -23,9 +23,9 @@ class MaintenanceRecordAPITest(TestCase):
     def setUp(self):
         try:
             # Tạo tài khoản test
-            self.user = User.objects.create_user(username="admin", password="4791")
+            self.user = User.objects.create_user(username="test_admin", password="4791")
             self.client = APIClient()
-            self.client.login(username="admin", password="4791")
+            self.client.login(username="test_admin", password="4791")
 
             # Tạo các đối tượng cần thiết
             self.category = EquipmentCategories.create_if_not_exists("Test Category")
