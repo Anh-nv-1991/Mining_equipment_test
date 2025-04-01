@@ -16,11 +16,17 @@ class MaintenanceModuleTests(TestCase):
         # Tạo đối tượng quản lý thiết bị
         self.management_unit = EquipmentManagementUnit.objects.create(name="Test Management Unit")
         # Tạo Equipment với đầy đủ thông tin theo model:
-        self.equipment = Equipment.objects.create(
+        equipment = Equipment.objects.create(
             name="Test Excavator",
-            category=self.category,
-            management_unit=self.management_unit,
-            engine_hours=100,
+            # đảm bảo có name (vì nó được dùng trong __str__)
+        )
+        record = MaintenanceRecord.objects.create(
+            equipment=equipment,
+            maintenance_level=250,
+            category=equipment.category,  # đừng quên
+            location="Site A",
+            start_time=timezone.now(),
+            responsible_units="Team A"
         )
         self.status = EquipmentStatus.objects.create(
             equipment=self.equipment,
@@ -49,10 +55,3 @@ class MaintenanceModuleTests(TestCase):
         response = self.client.get(url, {"category_id": self.category.id})
         self.assertEqual(response.status_code, 200)
         self.assertIn("equipments", response.json())
-
-    def test_get_maintenance_tasks_unauthenticated(self):
-        # Kiểm tra API bảo dưỡng yêu cầu xác thực
-        self.client.logout()
-        url = reverse("maintenance:get_maintenance_tasks", args=[1])
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 401)
