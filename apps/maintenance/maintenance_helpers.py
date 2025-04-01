@@ -5,6 +5,7 @@ from datetime import datetime
 from django.db.models import Q
 from apps.wear_part_stock.models import WearPartStock
 from django.utils.safestring import mark_safe
+import unicodedata
 
 
 def generate_record_id(record):
@@ -44,12 +45,13 @@ def check_inventory_for_template(template):
 
 def sanitize_name(name: str) -> str:
     """
-    Chuẩn hóa tên file/thư mục: bỏ ký tự đặc biệt, thay dấu cách bằng _, viết thường.
-    Dùng để tạo tên thư mục an toàn trên hệ thống file.
+    Chuẩn hóa tên file/thư mục: bỏ dấu tiếng Việt, ký tự đặc biệt, dấu cách thành _, viết thường.
     """
     if not name:
         return "unknown"
     name = name.strip().lower()
+    name = unicodedata.normalize('NFD', name)
+    name = ''.join(c for c in name if unicodedata.category(c) != 'Mn')
     name = re.sub(r"\s+", "_", name)
     name = re.sub(r"[^\w\-]", "", name)
     return name
