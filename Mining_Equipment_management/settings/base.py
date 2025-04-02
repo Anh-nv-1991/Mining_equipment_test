@@ -16,20 +16,17 @@ DB_HOST = env("DB_HOST")
 DB_PORT = env.int("DB_PORT", default=3306)
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": DB_NAME,
-        "USER": DB_USER,
-        "PASSWORD": DB_PASS,
-        "HOST": DB_HOST,
-        "PORT": DB_PORT,
-        "TEST": {
-            # Dùng lại database đã có, không cho Django tự tạo database mới
-            "NAME": DB_NAME,
-            # Yêu cầu Django sử dụng database mặc định như một mirror,
-            # do đó, test runner không cố gắng tạo database mới.
-            "MIRROR": "default",
-        },
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': os.getenv("DB_NAME"),
+        'USER': os.getenv("DB_USER"),
+        'PASSWORD': os.getenv("DB_PASS"),
+        'HOST': os.getenv("DB_HOST", "localhost"),
+        'PORT': os.getenv("DB_PORT", 3306),
+        'TEST': {
+            'NAME': os.getenv("TEST_DB_NAME", "test_" + os.getenv("DB_NAME")),
+            'MIGRATE': True,
+        }
     }
 }
 
