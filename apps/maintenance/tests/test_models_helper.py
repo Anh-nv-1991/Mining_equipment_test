@@ -1,119 +1,107 @@
-from datetime import datetime, timedelta
-from unittest.mock import Mock, patch
 from django.test import TestCase
-from django.utils.safestring import SafeString
+from unittest.mock import Mock, patch
 
-from apps.maintenance.maintenance_helpers import (
-    generate_record_id,
-    calculate_shift_count,
-    generate_csv_filename,
-    check_inventory_for_template,
-    sanitize_name,
-    get_replacement_status,
-    map_status_to_vietnamese,
-    get_grouped_data,
-    render_grouped_table
-)
+from apps.maintenance.models_helper import group_tasks_and_results
 
-class MaintenanceHelpersTest(TestCase):
+class ModelsHelperTest(TestCase):
     def setUp(self):
-        self.mock_record = Mock()
-        self.mock_record.category.name = "Xe Đào||EX200"
-        self.mock_record.equipment.name = "Hitachi ZX"
-        self.mock_record.maintenance_level = 250
-        self.mock_record.start_time = datetime(2025, 4, 1, 8, 0)
-        self.mock_record.end_time = datetime(2025, 4, 1, 16, 0)
+        self.maintenance_record = Mock()
 
-    def test_generate_record_id(self):
-        record_id = generate_record_id(self.mock_record)
-        self.assertTrue(record_id.startswith("EX200-HIT-250-25"))
+    @patch("apps.maintenance.models_helper.get_replacement_status")
+    @patch("apps.maintenance.models_helper.map_status_to_vietnamese")
+    def test_group_tasks_and_results_basic(self, mock_map_status, mock_get_status):
+        # Setup mocks for helper functions
+        mock_get_status.return_value = "Completed"
+        mock_map_status.return_value = "Đã thực hiện"
 
-    def test_calculate_shift_count(self):
-        start = datetime(2025, 4, 1, 8, 0)
-        end = datetime(2025, 4, 1, 18, 0)
-        self.assertEqual(calculate_shift_count(start, end), 2)
-
-    def test_generate_csv_filename(self):
-        filename = generate_csv_filename(self.mock_record)
-        self.assertTrue(filename.endswith("_1.csv"))
-
-    def test_sanitize_name(self):
-        self.assertEqual(sanitize_name("TÊN Máy #1!"), "ten_may_1")
-        self.assertEqual(sanitize_name(None), "unknown")
-
-    def test_get_replacement_status(self):
-        task = Mock()
-        task.quantity = 5
+        # Fake template objects
+        replacement_template = Mock()
+        replacement_template.task_name = "Thay lọc nhớt"
+        replacement_template.replacement_type = "Lọc dầu"
+        replacement_template.manufacturer_id = "A123"
+        replacement_template.alternative_id = "B456"
+        replacement_template.check_inventory.return_value = {"status": "ok"}
 
         result = Mock()
-        result.task = task
+        result.notes = "Ghi chú test"
+        result.actual_quantity = 1
+        result.task = Mock(quantity=1)
 
-        result.actual_quantity = 0
-        self.assertEqual(get_replacement_status(result), "Not Started")
+        # Fake task object
+        task = Mock()
+        task.id = 1
+        task.quantity = 1
+        task.content_type.model = "replacementtemplate"
+        task.template = replacement_template
+        task.replacement_result = result
+        task.supplement_result = None
+        task.inspection_result = None
+        task.cleaning_result = None
 
-        result.actual_quantity = 3
-        self.assertEqual(get_replacement_status(result), "Incomplete")
+        self.maintenance_record.tasks.all.return_value.order_by.return_value = [task]
 
-        result.actual_quantity = 5
-        self.assertEqual(get_replacement_status(result), "Completed")
-
-        result.actual_quantity = 7
-        self.assertEqual(get_replacement_status(result), "Overdone")
-
-    def test_map_status_to_vietnamese(self):
-        self.assertEqual(map_status_to_vietnamese("Not Started"), "Chưa thực hiện")
-        self.assertEqual(map_status_to_vietnamese("Invalid"), "Không xác định")
-        self.assertEqual(map_status_to_vietnamese("Random"), "Random")
-
-    def test_check_inventory_for_template(self):
-        template = Mock()
-        template.quantity = 5
-        template.manufacturer_id = "A123/B456"
-
-        mock_qs = [Mock(stock_quantity=2), Mock(stock_quantity=4)]
-
-        with patch("apps.maintenance.maintenance_helpers.WearPartStock.objects.filter", return_value=mock_qs):
-            result = check_inventory_for_template(template)
-            self.assertEqual(result["status"], "ok")
-            self.assertEqual(result["available"], 6)
-            self.assertEqual(result["shortage"], 0)
-
-    def test_get_grouped_data_with_list(self):
-        completed_record = Mock()
-        completed_record.tasks = [
-            {"id": 1, "task_type": "replacementtemplate"},
-            {"id": 2, "task_type": "supplementtemplate"},
-        ]
-        completed_record.results = [
-            {"task_id": 1, "status": "Completed"},
-            {"task_id": 2, "status": "Not Started"},
-        ]
-
-        grouped = get_grouped_data(completed_record)
+        grouped = group_tasks_and_results(self.maintenance_record)
         self.assertIn("replacementtemplate", grouped)
-        self.assertEqual(len(grouped["replacementtemplate"]), 1)
 
-    def test_get_grouped_data_with_dict(self):
-        completed_record = Mock()
-        completed_record.tasks = {
-            "inspectiontemplate": {
-                "tasks": [{"id": 3, "task_name": "Kiểm tra dầu"}],
-                "results": [{"task_id": 3, "condition": "Tốt"}]
-            }
-        }
-        completed_record.results = []
+        tasks = grouped["replacementtemplate"]["tasks"]
+        results = grouped["replacementtemplate"]["results"]
 
-        grouped = get_grouped_data(completed_record)
-        self.assertIn("inspectiontemplate", grouped)
-        self.assertEqual(len(grouped["inspectiontemplate"]), 1)
+        self.assertEqual(len(tasks), 1)
+        self.assertEqual(tasks[0]["task_name"], "Thay lọc nhớt")
+        self.assertEqual(results[0]["status"], "Đã thực hiện")
+        self.assertEqual(results[0]["inventory_status"], "ok")
 
-    def test_render_grouped_table_html(self):
-        grouped_data = {
-            "replacementtemplate": [
-                ({"id": 1, "task_name": "Thay lọc"}, {"status": "Completed", "actual_quantity": 1, "inventory_status": "ok", "notes": "", "replacement_type": "lọc dầu", "manufacturer_id": "A123", "alternative_id": "B456", "quantity": 1}),
-            ]
-        }
-        html = render_grouped_table(grouped_data)
-        self.assertIsInstance(html, SafeString)
-        self.assertIn("<h3>REPLACEMENTTEMPLATE</h3>", html)
-        self.assertIn("<td>1</td>", html)
+    @patch("apps.maintenance.models_helper.get_replacement_status")
+    @patch("apps.maintenance.models_helper.map_status_to_vietnamese")
+    def test_group_tasks_and_results_supplement(self, mock_map_status, mock_get_status):
+        mock_get_status.return_value = "Completed"
+        mock_map_status.return_value = "Đã thực hiện"
+
+        supplement_template = Mock()
+        supplement_template.position = "Mỡ"
+        supplement_template.change_type = "Bôi trơn"
+
+        result = Mock()
+        result.notes = "Hoàn tất"
+        result.completed = True
+
+        task = Mock()
+        task.id = 2
+        task.quantity = 2
+        task.content_type.model = "supplementtemplate"
+        task.template = supplement_template
+        task.supplement_result = result
+        task.replacement_result = None
+        task.inspection_result = None
+        task.cleaning_result = None
+
+        self.maintenance_record.tasks.all.return_value.order_by.return_value = [task]
+
+        grouped = group_tasks_and_results(self.maintenance_record)
+        self.assertIn("supplementtemplate", grouped)
+        self.assertEqual(grouped["supplementtemplate"]["results"][0]["completed"], True)
+
+    @patch("apps.maintenance.models_helper.get_replacement_status")
+    @patch("apps.maintenance.models_helper.map_status_to_vietnamese")
+    def test_group_tasks_and_results_other_type(self, mock_map_status, mock_get_status):
+        mock_get_status.return_value = "Unknown"
+        mock_map_status.return_value = "Không xác định"
+
+        unknown_template = Mock()
+        unknown_template.task_name = "Tùy biến"
+
+        task = Mock()
+        task.id = 3
+        task.quantity = 3
+        task.content_type.model = "customtemplate"
+        task.template = unknown_template
+        task.replacement_result = None
+        task.supplement_result = None
+        task.inspection_result = None
+        task.cleaning_result = None
+
+        self.maintenance_record.tasks.all.return_value.order_by.return_value = [task]
+
+        grouped = group_tasks_and_results(self.maintenance_record)
+        self.assertIn("others", grouped)
+        self.assertEqual(len(grouped["others"]["tasks"]), 1)
