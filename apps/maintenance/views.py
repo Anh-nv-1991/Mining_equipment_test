@@ -157,7 +157,11 @@ class MaintenanceRecordViewSet(viewsets.ModelViewSet):
         print(">>> DEBUG comp.tasks =", comp.tasks)  # In ra consol
         # (Tuỳ chọn) Xuất file Excel
         try:
-            file_path = export_record_to_excel(record)
+            print(">>> DEBUG export_record_to_excel =", export_record_to_excel)
+            try:
+                file_path = export_record_to_excel(record)
+            except PermissionError as e:
+                return Response({"error": str(e)}, status=409)
         except PermissionError as e:
             return Response(
                 {"success": False, "error": str(e)},
@@ -169,53 +173,54 @@ class MaintenanceRecordViewSet(viewsets.ModelViewSet):
             status=status.HTTP_200_OK
         )
 
+    @action(detail=True, methods=["GET"], url_path="readonly")
+    def readonly_snapshot(self, request, pk=None):
+        """
+        Trả về dữ liệu snapshot (tasks, results) từ CompletedMaintenanceRecord,
+        nếu record đã "complete".
+        """
+        record = self.get_record(pk)
+        comp = getattr(record, 'completed_record', None)
+        if not comp:
+            # Chưa "complete"
+            return Response({
+                "completed": False,
+                "message": "Chưa hoàn tất. Không có snapshot."
+            }, status=status.HTTP_200_OK)
 
-@action(detail=True, methods=["GET"], url_path="readonly")
-def readonly_snapshot(self, request, pk=None):
-    """
-    Trả về dữ liệu snapshot (tasks, results) từ CompletedMaintenanceRecord,
-    nếu record đã "complete".
-    """
-    record = self.get_record(pk)
-    comp = getattr(record, 'completed_record', None)
-    if not comp:
-        # Chưa "complete"
+        from collections import defaultdict
+        data_out = defaultdict(list)
+
+        if isinstance(comp.tasks, dict):
+            for key, grp in comp.tasks.items():
+                zipped = []
+                t_arr = grp.get("tasks", [])
+                r_arr = grp.get("results", [])
+                for t, r in zip(t_arr, r_arr):
+                    zipped.append({
+                        "task": t,
+                        "result": r
+                    })
+                data_out[key] = zipped
+
+        # Xử lý sắp xếp theo thứ tự mong muốn
+        desired_order = ["cleaningtemplate", "inspectiontemplate", "supplementtemplate", "replacementtemplate"]
+        ordered_data_out = {}
+        # Thêm các nhóm theo thứ tự ưu tiên
+        for key in desired_order:
+            if key in data_out:
+                ordered_data_out[key] = data_out[key]
+        # Nếu có thêm nhóm khác không nằm trong desired_order thì append thêm sau:
+        for key in data_out:
+            if key not in ordered_data_out:
+                ordered_data_out[key] = data_out[key]
+
         return Response({
-            "completed": False,
-            "message": "Chưa hoàn tất. Không có snapshot."
-        }, status=status.HTTP_200_OK)
+            "completed": True,
+            "snapshot": ordered_data_out,
+            "record_id": comp.record_id,
+            "completed_at": comp.completed_at.strftime("%Y-%m-%d %H:%M:%S") if comp.completed_at else "",
+            "notes": comp.notes or ""
+        })
 
-    from collections import defaultdict
-    data_out = defaultdict(list)
 
-    if isinstance(comp.tasks, dict):
-        for key, grp in comp.tasks.items():
-            zipped = []
-            t_arr = grp.get("tasks", [])
-            r_arr = grp.get("results", [])
-            for t, r in zip(t_arr, r_arr):
-                zipped.append({
-                    "task": t,
-                    "result": r
-                })
-            data_out[key] = zipped
-
-    # Xử lý sắp xếp theo thứ tự mong muốn
-    desired_order = ["cleaningtemplate", "inspectiontemplate", "supplementtemplate", "replacementtemplate"]
-    ordered_data_out = {}
-    # Thêm các nhóm theo thứ tự ưu tiên
-    for key in desired_order:
-        if key in data_out:
-            ordered_data_out[key] = data_out[key]
-    # Nếu có thêm nhóm khác không nằm trong desired_order thì append thêm sau:
-    for key in data_out:
-        if key not in ordered_data_out:
-            ordered_data_out[key] = data_out[key]
-
-    return Response({
-        "completed": True,
-        "snapshot": ordered_data_out,
-        "record_id": comp.record_id,
-        "completed_at": comp.completed_at.strftime("%Y-%m-%d %H:%M:%S") if comp.completed_at else "",
-        "notes": comp.notes or ""
-    })

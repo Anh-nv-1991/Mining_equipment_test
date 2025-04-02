@@ -176,3 +176,51 @@ Traceback (most recent call last):
 django.urls.exceptions.NoReverseMatch: 'two_factor' is not a registered namespace
 [01/Apr/2025 11:18:40] ERROR [backend.apps.maintenance.test.test_maintenance:57] Error in setUp: (1062, "Duplicate entry 'admin' for key 'auth_user.username'")
 [01/Apr/2025 11:18:40] ERROR [backend.apps.maintenance.test.test_maintenance:57] Error in setUp: (1062, "Duplicate entry 'admin' for key 'auth_user.username'")
+[02/Apr/2025 08:30:27] ERROR [django.request:248] Internal Server Error: /api/v1/maintenance/records/191/tasks/
+Traceback (most recent call last):
+  File "G:\Database\Mining_Equipment_management\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "G:\Database\Mining_Equipment_management\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "G:\Database\Mining_Equipment_management\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "G:\Database\Mining_Equipment_management\.venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "G:\Database\Mining_Equipment_management\.venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "G:\Database\Mining_Equipment_management\.venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "G:\Database\Mining_Equipment_management\.venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "G:\Database\Mining_Equipment_management\.venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "G:\Database\Mining_Equipment_management\backend\apps\maintenance\views.py", line 65, in tasks
+    task_id = item["id"]
+              ~~~~^^^^^^
+KeyError: 'id'
+[02/Apr/2025 08:32:20] ERROR [django.request:248] Internal Server Error: /api/v1/maintenance/records/197/tasks/
+Traceback (most recent call last):
+  File "G:\Database\Mining_Equipment_management\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "G:\Database\Mining_Equipment_management\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "G:\Database\Mining_Equipment_management\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "G:\Database\Mining_Equipment_management\.venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "G:\Database\Mining_Equipment_management\.venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "G:\Database\Mining_Equipment_management\.venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "G:\Database\Mining_Equipment_management\.venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "G:\Database\Mining_Equipment_management\.venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "G:\Database\Mining_Equipment_management\backend\apps\maintenance\views.py", line 70, in tasks
+    result_obj, created = model_cls.objects.get_or_create(task_id=task_id)
+    ^^^^^^^^^^^^^^^^^^^
+ValueError: not enough values to unpack (expected 2, got 0)
