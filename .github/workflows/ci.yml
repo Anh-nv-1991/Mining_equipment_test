@@ -31,7 +31,7 @@ jobs:
       DEBUG: "False"
       DB_NAME: test_db
       DB_USER: root
-      DB_PASS: test_pass
+      DB_PASS: rootpass
       DB_HOST: 127.0.0.1
       DB_PORT: 3306
       DJANGO_SETTINGS_MODULE: Mining_Equipment_management.settings.base
