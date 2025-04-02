@@ -1,49 +1,54 @@
 |-- ./
+    |-- .coverage
     |-- .env
+    |-- .gitignore
     |-- error.log
+    |-- LICENSE
     |-- manage.py
     |-- output.txt
     |-- print_tree.py
     |-- project_structure.txt
     |-- Python
+    |-- README.md
     |-- requirements.txt
+    |-- test_system_integration.py
     |-- tree_output.txt
-    |-- Xo├í
     |-- __init__.py
-    |-- .venv/
-        |-- .gitignore
-        |-- pyvenv.cfg
-        |-- Include/
-        |-- Lib/
-        |-- Scripts/
-            |-- activate
-            |-- activate.bat
-            |-- activate.fish
-            |-- Activate.ps1
-            |-- deactivate.bat
-            |-- django-admin.exe
-            |-- jsonschema.exe
-            |-- pip.exe
-            |-- pip3.13.exe
-            |-- pip3.exe
-            |-- prichunkpng
-            |-- pricolpng
-            |-- priditherpng
-            |-- priforgepng
-            |-- prigreypng
-            |-- pripalpng
-            |-- pripamtopng
-            |-- priplan9topng
-            |-- pripnglsch
-            |-- pripngtopam
-            |-- prirowpng
-            |-- priweavepng
-            |-- python.exe
-            |-- pythonw.exe
-            |-- qr.exe
-            |-- sqlformat.exe
-        |-- share/
+    |-- .git/
+        |-- .MERGE_MSG.swp
+        |-- COMMIT_EDITMSG
+        |-- config
+        |-- description
+        |-- FETCH_HEAD
+        |-- HEAD
+        |-- index
+        |-- ORIG_HEAD
+        |-- hooks/
+            |-- applypatch-msg.sample
+            |-- commit-msg.sample
+            |-- fsmonitor-watchman.sample
+            |-- post-update.sample
+            |-- pre-applypatch.sample
+            |-- pre-commit.sample
+            |-- pre-merge-commit.sample
+            |-- pre-push.sample
+            |-- pre-rebase.sample
+            |-- pre-receive.sample
+            |-- prepare-commit-msg.sample
+            |-- push-to-checkout.sample
+            |-- sendemail-validate.sample
+            |-- update.sample
+        |-- info/
+            |-- exclude
+        |-- logs/
+            |-- HEAD
+        |-- objects/
+        |-- refs/
+    |-- .github/
+        |-- workflows/
+            |-- ci.yml
     |-- apps/
+        |-- my_two_factor_urls.py
         |-- secure_admin.py
         |-- __init__.py
         |-- core/
@@ -77,7 +82,6 @@
             |-- models_helper.py
             |-- serializers.py
             |-- signals.py
-            |-- tests.py
             |-- urls.py
             |-- views.py
             |-- views_templates.py
@@ -92,9 +96,11 @@
             |-- views.py
             |-- __init__.py
         |-- __pycache__/
+            |-- my_two_factor_urls.cpython-313.pyc
             |-- secure_admin.cpython-313.pyc
             |-- __init__.cpython-313.pyc
     |-- exports/
+        |-- excavator/
         |-- máy_xúc_thủy_lực__pc-450/
     |-- Mining_Equipment_management/
         |-- asgi.py
@@ -128,9 +134,13 @@
         |-- __init__.py
         |-- admin/
             |-- base_site.html
+        |-- equipment/
+            |-- home.html
+            |-- __init__.py
         |-- two_factor/
             |-- _base.html
         |-- __pycache__/
             |-- __init__.cpython-313.pyc
     |-- __pycache__/
+        |-- test_system_integration.cpython-313.pyc
         |-- __init__.cpython-313.pyc
