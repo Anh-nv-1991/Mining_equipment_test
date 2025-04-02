@@ -29,8 +29,8 @@ jobs:
     env:
       DJANGO_SECRET_KEY: testsecretkey
       DEBUG: "False"
-      DB_NAME: db
-      DB_USER: test_user
+      DB_NAME: test_db
+      DB_USER: root
       DB_PASS: test_pass
       DB_HOST: 127.0.0.1
       DB_PORT: 3306
