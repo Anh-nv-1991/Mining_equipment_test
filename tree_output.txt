@@ -8,9 +8,11 @@
     |-- output.txt
     |-- print_tree.py
     |-- project_structure.txt
+    |-- pytest.ini
     |-- Python
     |-- README.md
     |-- requirements.txt
+    |-- test_localsystem.txt
     |-- test_system_integration.py
     |-- tree_output.txt
     |-- __init__.py
@@ -47,6 +49,14 @@
     |-- .github/
         |-- workflows/
             |-- ci.yml
+    |-- .venv/
+        |-- .gitignore
+        |-- pyvenv.cfg
+        |-- Include/
+        |-- Lib/
+        |-- Scripts/
+            |-- python.exe
+            |-- pythonw.exe
     |-- apps/
         |-- my_two_factor_urls.py
         |-- secure_admin.py
@@ -112,6 +122,7 @@
             |-- base.py
             |-- dev.py
             |-- prod.py
+            |-- test.py
             |-- __init__.py
         |-- __pycache__/
             |-- settings.cpython-313.pyc
@@ -142,5 +153,6 @@
         |-- __pycache__/
             |-- __init__.cpython-313.pyc
     |-- __pycache__/
+        |-- test_system_integration.cpython-313-pytest-8.3.5.pyc
         |-- test_system_integration.cpython-313.pyc
         |-- __init__.cpython-313.pyc
