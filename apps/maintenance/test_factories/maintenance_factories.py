@@ -1,6 +1,7 @@
 import factory
 from django.utils import timezone
 from django.contrib.auth.models import User
+from apps.maintenance.models import ReplacementResult
 
 # --- Equipment Management Factories ---
 class EquipmentCategoriesFactory(factory.django.DjangoModelFactory):
@@ -90,3 +91,12 @@ class EquipmentStatusFactory(factory.django.DjangoModelFactory):
         model = 'equipment_status.EquipmentStatus'
     equipment = factory.SubFactory(EquipmentFactory)
     operation_team = "Team A"
+
+class ReplacementResultFactory(factory.django.DjangoModelFactory):
+        class Meta:
+            model = ReplacementResult
+
+        task = factory.SubFactory(MaintenanceTaskFactory)  # đảm bảo MaintenanceTaskFactory đã được định nghĩa
+        actual_quantity = factory.LazyAttribute(lambda o: o.task.quantity)
+        completed = True
+        notes = "Test replacement result"
