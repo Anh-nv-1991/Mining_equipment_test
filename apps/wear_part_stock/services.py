@@ -36,7 +36,6 @@ def deduct_inventory_for_record(record):
 
         if delta > 0:
             remaining = delta
-            # Giả sử trong trường hợp đơn giản chỉ có 1 stock phù hợp
             if stocks.count() == 1:
                 stock = stocks.first()
                 deduct = min(stock.stock_quantity, remaining)
@@ -49,7 +48,6 @@ def deduct_inventory_for_record(record):
                     quantity=deduct,
                     shortage=remaining - deduct
                 ))
-                remaining = 0
             else:
                 for stock in stocks:
                     if remaining <= 0:
@@ -77,19 +75,40 @@ def deduct_inventory_for_record(record):
                     ))
 
         elif delta < 0:
+
             refund_amount = -delta
-            # Cập nhật log hiện có thay vì tạo log mới với giá trị âm.
-            existing_log = existing_logs.first()
-            if existing_log and existing_log.stock:
-                stock = existing_log.stock
-                print(f"💰 Hoàn trả {refund_amount} vào {stock.manufacturer_id} (trước: {stock.stock_quantity})")
-                stock.stock_quantity += refund_amount
-                stock.save(update_fields=["stock_quantity"])
-                # Cập nhật log: giảm số lượng trừ đi refund_amount.
-                existing_log.quantity = existing_log.quantity - refund_amount
-                existing_log.save(update_fields=['quantity'])
+
+            # Re-fetch existing logs cho task sau khi kết quả đã update.
+
+            existing_logs = StockMovementLog.objects.filter(maintenance_record=record, task=task)
+
+            if existing_logs.exists():
+
+                existing_log = existing_logs.first()
+
+                if existing_log and existing_log.stock:
+
+                    stock = existing_log.stock
+
+                    print(f"💰 Hoàn trả {refund_amount} vào {stock.manufacturer_id} (trước: {stock.stock_quantity})")
+
+                    stock.stock_quantity += refund_amount
+
+                    stock.save(update_fields=["stock_quantity"])
+
+                    # Update log: giảm số lượng trừ đi refund_amount.
+
+                    existing_log.quantity = existing_log.quantity - refund_amount
+
+                    existing_log.save(update_fields=['quantity'])
+
+                else:
+
+                    print("⚠️ Không tìm thấy stock để hoàn trả")
+
             else:
-                print("⚠️ Không tìm thấy stock để hoàn trả")
+
+                print("⚠️ Không có log để hoàn trả")
 
     return logs
 # hàm sync số liệu tồn kho
