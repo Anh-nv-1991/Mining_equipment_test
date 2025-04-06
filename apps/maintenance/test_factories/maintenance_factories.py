@@ -98,5 +98,4 @@ class ReplacementResultFactory(factory.django.DjangoModelFactory):
 
         task = factory.SubFactory(MaintenanceTaskFactory)  # đảm bảo MaintenanceTaskFactory đã được định nghĩa
         actual_quantity = factory.LazyAttribute(lambda o: o.task.quantity)
-        completed = True
         notes = "Test replacement result"
