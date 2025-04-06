@@ -1,6 +1,15 @@
 import os
 from pathlib import Path
 import environ
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+
+sentry_sdk.init(
+    dsn="https://9823319ef649235e9dbd668bf51da24a@o4509106619547648.ingest.us.sentry.io/4509106626822144",
+    # Add data like request headers and IP for users,
+    # see https://docs.sentry.io/platforms/python/data-management/data-collected/ for more info
+    send_default_pii=True,
+)
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 
