@@ -92,4 +92,80 @@ def deduct_inventory_for_record(record):
                 print("⚠️ Không tìm thấy stock để hoàn trả")
 
     return logs
+# hàm sync số liệu tồn kho
+def sync_inventory_with_record(record):
+    tasks = record.tasks.filter(content_type__model='replacementtemplate')
+    logs = StockMovementLog.objects.filter(maintenance_record=record)
+
+    # Xoá log và hoàn trả kho nếu cần
+    for log in logs:
+        task = getattr(log, 'task', None)
+        if not task:
+            continue
+
+        # Nếu task không còn hoàn thành → rollback stock
+        result = getattr(task, 'replacement_result', None)
+        completed_now = getattr(result, 'completed', False)
+
+        if not completed_now:
+            if log.stock:
+                log.stock.stock_quantity += log.quantity
+                log.stock.save(update_fields=["stock_quantity"])
+            log.delete()
+            continue  # bỏ qua phần trừ lại bên dưới
+
+    # Trừ lại theo actual_quantity mới
+    for task in tasks:
+        result = getattr(task, 'replacement_result', None)
+        if not result:
+            continue
+
+        status = get_replacement_status(result)
+        # Bỏ qua nếu chưa hoàn thành (Not Started, Incomplete, Overdone)
+        if status != "Completed":
+            continue
+
+        actual_qty = getattr(result, 'actual_quantity', 0)
+        if actual_qty <= 0:
+            continue
+
+        # Đã từng có log? → bỏ qua để không trừ lại
+        if logs.filter(task_id=task.id).exists():
+            continue
+
+        codes = [c.strip() for c in (task.template.manufacturer_id or "").split("/")]
+        remaining = actual_qty
+
+        stocks = WearPartStock.objects.filter(
+            models.Q(manufacturer_id__in=codes) | models.Q(alternative_id__in=codes)
+        ).order_by('-stock_quantity')
+
+        for stock in stocks:
+            if remaining <= 0:
+                break
+
+            deduct = min(stock.stock_quantity, remaining)
+            if deduct <= 0:
+                continue
+
+            stock.stock_quantity -= deduct
+            stock.save(update_fields=["stock_quantity"])
+
+            StockMovementLog.objects.create(
+                stock=stock,
+                maintenance_record=record,
+                task=task,
+                quantity=deduct,
+                shortage=0,
+            )
+            remaining -= deduct
+
+        if remaining > 0:
+            StockMovementLog.objects.create(
+                stock=None,
+                maintenance_record=record,
+                task=task,
+                quantity=0,
+                shortage=remaining,
+            )
 
