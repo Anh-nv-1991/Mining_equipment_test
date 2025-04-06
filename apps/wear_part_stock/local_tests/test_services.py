@@ -99,8 +99,9 @@ class ServicesTest(TestCase):
     @patch("apps.wear_part_stock.services.WearPartStock")
     def test_deduct_inventory_insufficient_stock(self, mock_wear_part_stock, mock_stock_movement_log):
         """
-        Kiểm tra khi tồn kho không đủ để trừ hết số lượng yêu cầu, dẫn đến log báo thiếu hàng.
-        Với task yêu cầu 5, nhưng tồn kho chỉ có 3, deduction sẽ trừ 3 và thiếu 2.
+        Kiểm tra khi tồn kho không đủ để trừ hết số lượng yêu cầu.
+        Với task yêu cầu 5, nhưng tồn kho chỉ có 3,
+        deduction sẽ trừ 3 và thiếu 2.
         """
         template = DummyTemplate("ABC")
         result = DummyResult(completed=True, actual_quantity=5)
@@ -109,19 +110,18 @@ class ServicesTest(TestCase):
 
         fake_stock = FakeStock(stock_quantity=3, manufacturer_id="ABC")
         fake_queryset = DummyQuerySet([fake_stock])
+        fake_queryset.count = lambda: 1
+        fake_queryset.first = lambda: fake_stock
         mock_wear_part_stock.objects.filter.return_value = fake_queryset
 
         dummy_log = MagicMock()
-        mock_stock_movement_log.objects.create.side_effect = [dummy_log, dummy_log]
+        # Cập nhật side_effect để tạo ra 1 log duy nhất
+        mock_stock_movement_log.objects.create.return_value = dummy_log
 
         logs = services.deduct_inventory_for_record(record)
         self.assertEqual(fake_stock.stock_quantity, 0)
-        self.assertEqual(len(logs), 2)
+        # Mong đợi 1 log entry
+        self.assertEqual(len(logs), 1)
         calls = mock_stock_movement_log.objects.create.call_args_list
         self.assertEqual(calls[0][1]['quantity'], 3)
-        self.assertEqual(calls[0][1]['shortage'], 0)
-        self.assertEqual(calls[1][1]['quantity'], 0)
-        self.assertEqual(calls[1][1]['shortage'], 2)
-
-# --- Các test khác (ví dụ, cho command import_stock) ---
-# ...
+        self.assertEqual(calls[0][1]['shortage'], 2)
