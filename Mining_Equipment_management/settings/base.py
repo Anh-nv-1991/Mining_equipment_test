@@ -4,20 +4,30 @@ import environ
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 
+# Sentry configuration
 sentry_sdk.init(
     dsn="https://9823319ef649235e9dbd668bf51da24a@o4509106619547648.ingest.us.sentry.io/4509106626822144",
-    # Add data like request headers and IP for users,
-    # see https://docs.sentry.io/platforms/python/data-management/data-collected/ for more info
+    integrations=[DjangoIntegration()],
     send_default_pii=True,
 )
 
+# Define project root and base directory
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+BASE_DIR = PROJECT_ROOT
 
+# Load environment variables dynamically
 env = environ.Env()
-environ.Env.read_env(PROJECT_ROOT / ".env")
+# Sử dụng file .env dựa trên biến môi trường ENV_FILE, mặc định là .env.dev
+env_file = os.getenv("ENV_FILE", ".env")  # thay vì .env.dev
+environ.Env.read_env(PROJECT_ROOT / env_file)
 
+# Core settings
 SECRET_KEY = env("DJANGO_SECRET_KEY")
 DEBUG = env.bool("DEBUG", default=False)
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=[])
+CORS_ALLOWED_ORIGINS = env.list("CORS_ALLOWED_ORIGINS", default=[])
+
+# Database configuration
 DB_NAME = env("DB_NAME")
 DB_USER = env("DB_USER")
 DB_PASS = env("DB_PASS")
@@ -39,10 +49,10 @@ DATABASES = {
     }
 }
 
-# Cấu hình bắt buộc để Django boot
+# Application definition
 INSTALLED_APPS = [
     'django_otp',
-    'django_otp.plugins.otp_totp',
+    'django_otp.plugins.otp_totp.apps.TOTPDeviceConfig',  # Sửa ở đây: sử dụng AppConfig cho TOTPDevice
     'two_factor',
     'grappelli',
     'apps.wear_part_stock',
@@ -65,6 +75,7 @@ INSTALLED_APPS = [
 ]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
@@ -79,7 +90,6 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "Mining_Equipment_management.urls"
 WSGI_APPLICATION = "Mining_Equipment_management.wsgi.application"
-BASE_DIR = PROJECT_ROOT
 
 TEMPLATES = [
     {
@@ -105,6 +115,7 @@ MEDIA_ROOT = BASE_DIR / 'exports'
 MEDIA_URL = '/media/exports/'
 USE_TZ = True
 TIME_ZONE = 'Asia/Ho_Chi_Minh'
+
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
@@ -116,7 +127,9 @@ REST_FRAMEWORK = {
     ],
     "EXCEPTION_HANDLER": "apps.core.exception_handler.custom_exception_handler",
 }
+
 SPECTACULAR_SETTINGS = {"TITLE": "Mining Equipment API", "VERSION": "1.0.0"}
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
