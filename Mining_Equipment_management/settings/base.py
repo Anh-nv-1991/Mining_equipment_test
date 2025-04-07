@@ -17,8 +17,7 @@ BASE_DIR = PROJECT_ROOT
 
 # Load environment variables dynamically
 env = environ.Env()
-# Sử dụng file .env dựa trên biến môi trường ENV_FILE, mặc định là .env.dev
-env_file = os.getenv("ENV_FILE", ".env")  # thay vì .env.dev
+env_file = os.getenv("ENV_FILE", ".env.dev")
 environ.Env.read_env(PROJECT_ROOT / env_file)
 
 # Core settings
@@ -52,7 +51,8 @@ DATABASES = {
 # Application definition
 INSTALLED_APPS = [
     'django_otp',
-    'django_otp.plugins.otp_totp.apps.TOTPDeviceConfig',  # Sửa ở đây: sử dụng AppConfig cho TOTPDevice
+    'django_otp.plugins.otp_totp',  # Sửa ở đây: sử dụng AppConfig cho TOTPDevice
+    'django_otp.plugins.otp_static',  # Sửa ở đây: sử dụng AppConfig cho TOTPDevice
     'two_factor',
     'grappelli',
     'apps.wear_part_stock',
