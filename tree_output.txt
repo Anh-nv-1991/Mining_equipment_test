@@ -1,6 +1,7 @@
 |-- ./
     |-- .coverage
-    |-- .env
+    |-- .env.dev
+    |-- .env.prod
     |-- .gitignore
     |-- error.log
     |-- LICENSE
@@ -49,14 +50,11 @@
     |-- .github/
         |-- workflows/
             |-- ci.yml
-    |-- .venv/
+    |-- .pytest_cache/
         |-- .gitignore
-        |-- pyvenv.cfg
-        |-- Include/
-        |-- Lib/
-        |-- Scripts/
-            |-- python.exe
-            |-- pythonw.exe
+        |-- CACHEDIR.TAG
+        |-- README.md
+        |-- v/
     |-- apps/
         |-- my_two_factor_urls.py
         |-- secure_admin.py
@@ -110,6 +108,11 @@
             |-- secure_admin.cpython-313.pyc
             |-- __init__.cpython-313.pyc
     |-- exports/
+        |-- category_0/
+        |-- category_15/
+        |-- category_17/
+        |-- category_2/
+        |-- category_3/
         |-- excavator/
         |-- máy_xúc_thủy_lực__pc-450/
     |-- Mining_Equipment_management/
@@ -138,6 +141,21 @@
             |-- favicon.ico
             |-- favicon_io.zip
             |-- hatu_logo.PNG
+        |-- __pycache__/
+            |-- __init__.cpython-313.pyc
+    |-- staticfiles/
+        |-- __init__.py
+        |-- admin/
+        |-- adminsortable2/
+        |-- css/
+            |-- custom.css
+        |-- django_extensions/
+        |-- grappelli/
+        |-- images/
+            |-- favicon.ico
+            |-- favicon_io.zip
+            |-- hatu_logo.PNG
+        |-- rest_framework/
         |-- __pycache__/
             |-- __init__.cpython-313.pyc
     |-- templates/

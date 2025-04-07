@@ -1,0 +1,70 @@
+/* ==== OVERRIDE EXISTING MODAL ==== */
+#maintenanceReadonlyModal {
+    position: fixed !important;
+    top: 5% !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 80% !important;
+    max-width: 900px !important;
+    height: 90vh !important;
+    background: #e8e8e8 !important;  /* màu ghi nhạt */
+    padding: 20px !important;
+    overflow: auto !important;
+    z-index: 9999 !important;
+}
+
+#readonlyModalBody {
+    height: auto !important;
+    overflow: visible !important;
+}
+
+/* ==== TABLE STYLES ==== */
+table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    background-color: #fdf5e6 !important; /* màu vàng giấy */
+}
+
+th, td {
+    padding: 10px !important;
+    border: 1px solid #ddd !important;
+}
+
+th {
+    background-color: #f4f4f4 !important;
+    font-weight: 600 !important;
+}
+
+/* ==== TYPOGRAPHY ==== */
+h2 {
+    text-align: center !important;
+    font-size: 24px !important;
+    margin-bottom: 20px !important;
+}
+
+p {
+    font-size: 16px !important;
+    margin: 5px 0 !important;
+}
+
+hr {
+    border: none !important;
+    border-top: 1px solid #ccc !important;
+    margin: 20px 0 !important;
+}
+
+#maintenanceReadonlyModal div[style*="overflow:auto"] {
+    overflow: visible !important;
+    max-height: none !important;
+}
+.close {
+    color: red;
+    font-size: 50px;
+    font-weight: bold;
+    opacity: 1;
+}
+
+.close:hover {
+    color: darkred;
+    cursor: pointer;
+}
