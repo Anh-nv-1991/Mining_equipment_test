@@ -4,9 +4,9 @@ from .models import WearPartStock, StockMovementLog
 
 @admin.register(WearPartStock)
 class WearPartStockAdmin(admin.ModelAdmin):
-    list_display = ("manufacturer_fk", "name", "stock_quantity", "min_threshold", "unit", "manufacturer_id", "alternative_id")
-    search_fields = ("manufacturer_fk__name", "manufacturer_id", "name")
-    list_filter = ("manufacturer_fk",)
+    list_display = ("name", "stock_quantity", "min_threshold", "unit", "manufacturer_id", "alternative_id")
+    search_fields = ( "manufacturer_id", "name")
+
 @admin.register(StockMovementLog)
 class StockMovementLogAdmin(admin.ModelAdmin):
     list_display = ('stock', 'maintenance_record', 'quantity', 'shortage', 'timestamp')
