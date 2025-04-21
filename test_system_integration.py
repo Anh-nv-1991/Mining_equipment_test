@@ -61,7 +61,6 @@ class SystemIntegrationTests(TestCase):
 
         # --- Wear Part Stock Setup ---
         self.wearpart = WearPartStock.objects.create(
-            manufacturer_fk=self.manufacturer,
             name="Wear Part A",
             stock_quantity=100,
             min_threshold=10,

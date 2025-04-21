@@ -26,7 +26,6 @@ class WearPartStockTests(TestCase):
         )
 
         self.part = WearPartStock.objects.create(
-            manufacturer_fk=self.manufacturer,
             name="Filter A",
             stock_quantity=10,
             min_threshold=2,

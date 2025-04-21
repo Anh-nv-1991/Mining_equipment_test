@@ -15,7 +15,6 @@ class WearPartStockFactory(factory.django.DjangoModelFactory):
     class Meta:
         # Sử dụng app label đúng theo AppConfig (thường là phần cuối của tên module)
         model = 'wear_part_stock.WearPartStock'
-    manufacturer_fk = factory.SubFactory(ManufacturerFactory)
     name = factory.Sequence(lambda n: f"Test Part {n}")
     stock_quantity = 10  # Số lượng tồn kho ban đầu
     min_threshold = 1

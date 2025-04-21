@@ -24,12 +24,10 @@ class Migration(migrations.Migration):
                 ('unit', models.CharField(blank=True, max_length=10, verbose_name='Đơn vị')),
                 ('manufacturer_id', models.CharField(max_length=50, unique=True, verbose_name='Mã vật tư hãng')),
                 ('alternative_id', models.CharField(blank=True, max_length=50, null=True, verbose_name='Mã thay thế')),
-                ('manufacturer_fk', models.ForeignKey(db_column='manufacturer_fk', on_delete=django.db.models.deletion.PROTECT, to='equipment_management.manufacturer', verbose_name='Hãng sản xuất')),
             ],
             options={
                 'verbose_name': 'Wear Part Stock',
                 'verbose_name_plural': 'Wear Part Stocks',
-                'ordering': ['manufacturer_fk'],
             },
         ),
         migrations.CreateModel(

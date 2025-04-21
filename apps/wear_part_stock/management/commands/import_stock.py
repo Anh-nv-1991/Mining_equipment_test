@@ -58,7 +58,6 @@ class Command(BaseCommand):
             alt = row['alternative_id'] or None
             threshold = int(row.get('min_threshold'))
             obj, created = WearPartStock.objects.update_or_create(
-                manufacturer_fk=manu_obj,   # Sử dụng manufacturer_fk thay vì manufacturer
                 manufacturer_id=part_no,
                 defaults={
                     'name': row['name'],
