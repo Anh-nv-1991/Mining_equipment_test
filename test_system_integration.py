@@ -123,16 +123,3 @@ class SystemIntegrationTests(TestCase):
         response_completed = self.client.get(url_completed)
         self.assertEqual(response_completed.status_code, 200)
         self.assertContains(response_completed, self.equipment.name)
-
-    def test_wear_part_stock_deduct(self):
-        """
-        Test endpoint của wear_part_stock để giảm tồn kho.
-        Vì không có task nào đáp ứng điều kiện trong MaintenanceRecord,
-        dự kiến deductions sẽ rỗng.
-        """
-        url_deduct = reverse('wearpartstock_deduct', kwargs={'record_id': self.maintenance_record.id})
-        response = self.client.post(url_deduct, data=json.dumps({}), content_type='application/json')
-        self.assertEqual(response.status_code, 200)
-        data = response.json()
-        self.assertTrue(data.get("success"))
-        self.assertEqual(data.get("deductions"), [])

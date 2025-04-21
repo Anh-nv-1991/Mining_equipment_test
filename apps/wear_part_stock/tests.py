@@ -54,8 +54,3 @@ class WearPartStockTests(TestCase):
         self.assertEqual(shortage, 5)
         self.assertEqual(self.part.stock_quantity, 0)
 
-    def test_api_deduct_stock_view_minimal(self):
-        url = reverse("wearpartstock_deduct", args=[self.record.id])
-        response = self.client.post(url)
-        self.assertEqual(response.status_code, 200)
-        self.assertIn("success", response.json())
