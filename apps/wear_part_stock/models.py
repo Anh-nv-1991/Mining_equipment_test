@@ -2,12 +2,6 @@ from django.db import models
 from apps.equipment_management.models import Manufacturer
 
 class WearPartStock(models.Model):
-    manufacturer_fk = models.ForeignKey(
-        Manufacturer, 
-        on_delete=models.PROTECT, 
-        verbose_name="Hãng sản xuất",
-        db_column="manufacturer_fk"
-    )
     name = models.CharField("Tên vật tư", max_length=150)
     stock_quantity = models.PositiveIntegerField("Số lượng tồn", default=0)
     min_threshold = models.PositiveIntegerField("Tồn kho tối thiểu", default=0)
@@ -18,10 +12,9 @@ class WearPartStock(models.Model):
     class Meta:
         verbose_name = "Wear Part Stock"
         verbose_name_plural = "Wear Part Stocks"
-        ordering = ["manufacturer_fk"]
 
     def __str__(self):
-        return f"{self.manufacturer_fk.name} | {self.manufacturer_id} — {self.name}"
+        return self.name
     @classmethod
     def deduct_parts(cls, codes: list[str], quantity: int) -> int:
         """
